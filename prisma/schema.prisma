@@ -97,5 +97,20 @@ model Repo {
   createdAt     DateTime  @default(now())
   lastUsedAt    DateTime  @default(now())
 
+  ChatSessions  ChatSession[]
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChatSession {
+  id        String    @id     @default(uuid())
+  repoId    String
+  threadId  String    @unique @default(dbgenerated("gen_random_uuid()"))
+  title     String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  repo      Repo      @relation(fields: [repoId], references: [id], onDelete: Cascade)
+
+  @@map("chat_sessions")
 }
