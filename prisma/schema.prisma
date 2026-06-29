@@ -22,6 +22,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  
+  repo          Repo?
 
   @@unique([email])
   @@map("user")
@@ -73,4 +75,27 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Repo {
+  id            String    @id @default(uuid())
+  userId        String    @unique
+  repoUrl       String
+  owner         String
+  name          String
+  languages     String[]
+  stars         Int       @default(0)
+  description   String?
+  githubId      String       @unique
+  forks         Int       @default(0)
+  isPrivate     Boolean   @default(false)
+  defaultBranch String    @default("main")
+
+  isIndexed     Boolean   @default(false)
+  indexedAt     DateTime?
+
+  createdAt     DateTime  @default(now())
+  lastUsedAt    DateTime  @default(now())
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
